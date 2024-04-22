@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - release-*
+      - deps_k8s_0.28_dev
   pull_request: {}
   workflow_dispatch: {}
 
