@@ -23,6 +23,7 @@ import (
 	v1alpha1 "github.com/openkruise/kruise/apis/apps/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -34,9 +35,9 @@ type FakeDaemonSets struct {
 	ns   string
 }
 
-var daemonsetsResource = v1alpha1.SchemeGroupVersion.WithResource("daemonsets")
+var daemonsetsResource = schema.GroupVersionResource{Group: "apps.kruise.io", Version: "v1alpha1", Resource: "daemonsets"}
 
-var daemonsetsKind = v1alpha1.SchemeGroupVersion.WithKind("DaemonSet")
+var daemonsetsKind = schema.GroupVersionKind{Group: "apps.kruise.io", Version: "v1alpha1", Kind: "DaemonSet"}
 
 // Get takes name of the daemonSet, and returns the corresponding daemonSet object, and an error if there is any.
 func (c *FakeDaemonSets) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DaemonSet, err error) {

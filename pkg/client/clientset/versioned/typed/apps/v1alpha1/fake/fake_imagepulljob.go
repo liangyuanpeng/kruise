@@ -23,6 +23,7 @@ import (
 	v1alpha1 "github.com/openkruise/kruise/apis/apps/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -34,9 +35,9 @@ type FakeImagePullJobs struct {
 	ns   string
 }
 
-var imagepulljobsResource = v1alpha1.SchemeGroupVersion.WithResource("imagepulljobs")
+var imagepulljobsResource = schema.GroupVersionResource{Group: "apps.kruise.io", Version: "v1alpha1", Resource: "imagepulljobs"}
 
-var imagepulljobsKind = v1alpha1.SchemeGroupVersion.WithKind("ImagePullJob")
+var imagepulljobsKind = schema.GroupVersionKind{Group: "apps.kruise.io", Version: "v1alpha1", Kind: "ImagePullJob"}
 
 // Get takes name of the imagePullJob, and returns the corresponding imagePullJob object, and an error if there is any.
 func (c *FakeImagePullJobs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ImagePullJob, err error) {

@@ -23,6 +23,7 @@ import (
 	v1alpha1 "github.com/openkruise/kruise/apis/policy/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -34,9 +35,9 @@ type FakePodUnavailableBudgets struct {
 	ns   string
 }
 
-var podunavailablebudgetsResource = v1alpha1.SchemeGroupVersion.WithResource("podunavailablebudgets")
+var podunavailablebudgetsResource = schema.GroupVersionResource{Group: "policy.kruise.io", Version: "v1alpha1", Resource: "podunavailablebudgets"}
 
-var podunavailablebudgetsKind = v1alpha1.SchemeGroupVersion.WithKind("PodUnavailableBudget")
+var podunavailablebudgetsKind = schema.GroupVersionKind{Group: "policy.kruise.io", Version: "v1alpha1", Kind: "PodUnavailableBudget"}
 
 // Get takes name of the podUnavailableBudget, and returns the corresponding podUnavailableBudget object, and an error if there is any.
 func (c *FakePodUnavailableBudgets) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PodUnavailableBudget, err error) {
