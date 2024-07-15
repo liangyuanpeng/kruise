@@ -145,14 +145,14 @@ func VerifyGroupKind(ref interface{}, expectedKind string, expectedGroups []stri
 	case *appsv1alpha1.TargetReference:
 		gv, err = schema.ParseGroupVersion(ref.(*appsv1alpha1.TargetReference).APIVersion)
 		if err != nil {
-			klog.Errorf("failed to parse GroupVersion for apiVersion (%s): %s", ref.(*appsv1alpha1.TargetReference).APIVersion, err.Error())
+			klog.ErrorS(err, "Failed to parse GroupVersion for apiVersion", "APIVersion", ref.(*appsv1alpha1.TargetReference).APIVersion)
 			return false, err
 		}
 		kind = ref.(*appsv1alpha1.TargetReference).Kind
 	case *metav1.OwnerReference:
 		gv, err = schema.ParseGroupVersion(ref.(*metav1.OwnerReference).APIVersion)
 		if err != nil {
-			klog.Errorf("failed to parse GroupVersion for apiVersion (%s): %s", ref.(*metav1.OwnerReference).APIVersion, err.Error())
+			klog.ErrorS(err, "Failed to parse GroupVersion for apiVersion", "APIVersion", ref.(*metav1.OwnerReference).APIVersion)
 			return false, err
 		}
 		kind = ref.(*metav1.OwnerReference).Kind
@@ -253,8 +253,8 @@ func (h *Handler) HandlePodDeletion(pod *corev1.Pod, operation Operation) error 
 	}
 	err := json.Unmarshal([]byte(str), &injectWS)
 	if err != nil {
-		klog.Errorf("parse Pod (%s/%s) annotations[%s]=%s failed: %s", pod.Namespace, pod.Name,
-			MatchedWorkloadSpreadSubsetAnnotations, str, err.Error())
+		klog.ErrorS(err, "Parse Pod annotations failed", "namespace", pod.Namespace, "podName", pod.Name, "AnnotationKey",
+			MatchedWorkloadSpreadSubsetAnnotations, "AnnotationValue", str)
 		return nil
 	}
 
@@ -305,8 +305,8 @@ func (h *Handler) mutatingPod(matchedWS *appsv1alpha1.WorkloadSpread,
 	// if create pod, inject affinity、toleration、metadata in pod object
 	if operation == CreateOperation && len(suitableSubsetName) > 0 {
 		if _, injectErr = injectWorkloadSpreadIntoPod(matchedWS, pod, suitableSubsetName, generatedUID); injectErr != nil {
-			klog.Errorf("failed to inject Pod(%s/%s) subset(%s) data for WorkloadSpread(%s/%s)",
-				pod.Namespace, podName, suitableSubsetName, matchedWS.Namespace, matchedWS.Name)
+			klog.ErrorS(injectErr, "Failed to inject Pod subset data for WorkloadSpread", "namespace",
+				pod.Namespace, "podName", podName, "suitableSubsetName", suitableSubsetName, "matchedWS.Namespace", matchedWS.Namespace, "matchedWS.Name", matchedWS.Name)
 			return injectErr
 		}
 		klog.V(3).Infof("inject Pod(%s/%s) subset(%s) data for WorkloadSpread(%s/%s)",

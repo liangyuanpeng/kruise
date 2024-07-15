@@ -24,6 +24,24 @@ env:
   AWS_USR: ${{ secrets.AWS_USR }}
 
 jobs:
+
+  check-structured-log
+    name: check structured log
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Actions Repository
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: check
+        run: |
+          go install sigs.k8s.io/logtools/logcheck@main
+          logcheck -check-structured ./pkg/util/...
+          logcheck -check-structured ./pkg/controller/...
+          logcheck -check-structured ./pkg/control/...
+      
   typos-check:
     name: Spell Check with Typos
     runs-on: ubuntu-20.04
